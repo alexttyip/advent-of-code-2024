@@ -40,7 +40,8 @@ fn setup_day(day: u8) {
 
     if Path::new(day_dir.as_str()).exists() {
         println!("Day dir already exists");
-        return;
+    } else {
+        fs::create_dir(&day_dir).expect("Error creating day dir");
     }
 
     let input = fetch_input(day);
@@ -49,15 +50,15 @@ fn setup_day(day: u8) {
         .unwrap()
         .replace("00", format!("{day:02}").as_str());
 
-    fs::create_dir(&day_dir).expect("Error creating day dir");
-
-    OpenOptions::new()
+    if OpenOptions::new()
         .write(true)
         .create_new(true)
         .open(day_dir.to_string() + "/main.rs")
-        .expect("Cannot open Rust file")
-        .write_all(rust_file.as_bytes())
-        .expect("Error writing input");
+        .and_then(|mut f| f.write_all(rust_file.as_bytes()))
+        .is_err()
+    {
+        println!("Did not update main.rs");
+    }
 
     OpenOptions::new()
         .write(true)
