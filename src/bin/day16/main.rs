@@ -7,10 +7,6 @@ use std::time::Instant;
 
 const N: usize = 141;
 
-fn get_neighbours(u: usize) -> [usize; 4] {
-    [u - N, u + 1, u + N, u - 1]
-}
-
 fn parse() -> ([bool; N * N], usize, usize) {
     let mut is_space = [true; N * N];
     let mut src = 0;
@@ -45,6 +41,10 @@ fn get_turn_weight(dir1: usize, dir2: usize) -> usize {
         0..3 => diff * 1000 + 1,
         _ => 1001,
     }
+}
+
+fn get_neighbours(u: usize) -> [usize; 4] {
+    [u - N, u + 1, u + N, u - 1]
 }
 
 fn dijkstra(is_space: [bool; N * N], src: usize) -> [[usize; 4]; N * N] {
